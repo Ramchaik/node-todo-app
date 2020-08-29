@@ -14,6 +14,7 @@ module.exports = function (app) {
 
       res.send(todos);
     } catch (error) {
+      console.log('error', error);
       res.status(500).send({ msg: 'Something went wrong' });
     }
   });
@@ -26,6 +27,7 @@ module.exports = function (app) {
 
       res.send(todo);
     } catch (error) {
+      console.log('error', error);
       res.status(500).send({ msg: 'Something went wrong' });
     }
   });
@@ -41,23 +43,25 @@ module.exports = function (app) {
 
     try {
       if (id) await Todos.findByIdAndUpdate(id, newTodo);
-      else todo = await Todos.create(newTodo);
+      else newTodo = await Todos.create(newTodo);
 
-      if (!todo) throw new Error('Not able to create');
+      if (!newTodo) throw new Error('Not able to create');
 
-      res.status(201).send(todo);
+      res.status(201).send(newTodo);
     } catch (error) {
+      console.log('error', error);
       res.status(500).send({ msg: 'Something went wrong' });
     }
   });
 
-  app.delete('/api/todo/:id', async (req, res) => {
-    const { id } = req.params;
+  app.delete('/api/todo', async (req, res) => {
+    const { id } = req.body;
     try {
       await Todos.findByIdAndRemove(id);
 
       res.send('Success');
     } catch (error) {
+      console.log('error', error);
       res.status(500).send({ msg: 'Something went wrong' });
     }
   });
